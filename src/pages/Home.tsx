@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import { Header } from '../components/Header';
@@ -9,15 +9,34 @@ export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
 
   function handleAddTask(newTaskTitle: string) {
-    //TODO - add new task
+    const data = {
+      id: new Date().getTime(),
+      title: newTaskTitle,
+      done: false
+    }
+
+    setTasks(oldState => [...oldState, data])
   }
 
   function handleToggleTaskDone(id: number) {
-    //TODO - toggle task done if exists
+    //Percorre por todas as tasks, faz um spread para pegar tudo. 
+    const updateTasks = tasks.map(task => ({...task}))
+    console.log(updateTasks)
+    //Passa pelo map que fizemos e procura pela task que tem o mesmo ID que clicamos.
+    const foundItem = updateTasks.find(item => item.id === id)
+
+    //Se não tiver, retorna
+    if (!foundItem) return
+
+    //Se tiver, irá alterar o valor do done para o contrário do que já está. 
+    foundItem.done = !foundItem.done
+
+    //E então adicionamos essa alteração no novo estado das tasks. 
+    setTasks(updateTasks)
   }
 
   function handleRemoveTask(id: number) {
-    //TODO - remove task from state
+    setTasks(oldState => oldState.filter(task => task.id !== id))
   }
 
   return (
